@@ -64,13 +64,13 @@ class CurrencyMarkets:
         # calculate forward rates
         for currency in self.currdict.keys():
             currdata = pd.merge(self.currdict[currency]['Spotdata'], self.currdict[currency]['Fwdpdata'], on='Date')
-            currdata['Fwdrates'] = currdata['Spotdata'] + (self.currdict[currency]['fxMult'] * currdata['Fwdpdata'])
+            currdata['Fwdrates'] = currdata['Spot'] + (self.currdict[currency]['fxMult'] * currdata['Fwdp'])
             if self.currdict[currency]['Quotation Style'] == 'American':
-                self.markets[currency]['Spot'] = currdata['Spotdata'].to_dict(orient="index")
-                self.markets[currency]['Fwdrates'] = currdata['Fwdrates'].to_dict(orient="index")
+                self.markets[currency]['Spot'] = currdata[['Spot']].to_dict(orient="index")
+                self.markets[currency]['Fwdrates'] = currdata[['Fwdrates']].to_dict(orient="index")
             if self.currdict[currency]['Quotation Style'] == 'European':
                 self.markets[currency]['Spot'] = (1/currdata[['Spot']]).to_dict(orient="Index")
-                self.markets[currency]['Fwdrates'] = (1/currdata['Fwdrates']).to_dict(orient="index")
+                self.markets[currency]['Fwdrates'] = (1/currdata[['Fwdrates']]).to_dict(orient="index")
 
 
 dirname = r'C:\Users\44794\PycharmProjects\Py4Fin\CandidateProjectUSS'
