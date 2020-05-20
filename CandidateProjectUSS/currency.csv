@@ -1,0 +1,20 @@
+﻿Currency ,Quotation Style,fxMult
+EUR,American,0.0001
+JPY,European,0.01
+GBP,American,0.0001
+CHF,European,0.0001
+CAD,European,0.0001
+AUD,American,0.0001
+NZD,American,0.0001
+NOK,European,0.0001
+SEK,European,0.0001
+CZK,European,0.001
+HUF,European,0.01
+PLN,European,0.0001
+TRY,European,0.0001
+ZAR,European,0.0001
+SGD,European,0.0001
+MXN,European,0.0001
+BRL,European,0.0001
+KRW,European,0.01
+TWD,European,0.001
