@@ -29,7 +29,7 @@ class CurrencyMarkets:
     def getspot(self):
         # grab spots
         # identify format of every date in csvs & change to datetime
-        dateparse = lambda x: dateutil.parser.parse(x)
+        dateparse = lambda x: dateutil.parser.parse(x, dayfirst=True)
         for currency in self.currdict.keys():
             spotdf = pd.read_csv(self.path + '/data/' + currency + '_spot.csv',
                                  parse_dates=['Date'], date_parser=dateparse, index_col='Date')
@@ -38,7 +38,7 @@ class CurrencyMarkets:
 
     def getforward(self):
         # grab forwards
-        dateparse = lambda x: dateutil.parser.parse(x)
+        dateparse = lambda x: dateutil.parser.parse(x, dayfirst=True)
         for currency in self.currdict.keys():
             fwddf = pd.read_csv(self.path + '/data/' + currency + '_fwdp.csv',
                                 parse_dates=['Date'], date_parser=dateparse, index_col='Date')
@@ -47,14 +47,14 @@ class CurrencyMarkets:
 
     def getrebalancedates(self):
         # grab rebalance dates
-        dateparse = lambda x: dateutil.parser.parse(x)
+        dateparse = lambda x: dateutil.parser.parse(x, dayfirst=True)
         rebaldf = pd.read_csv(self.path + '/data/RebalanceDates.csv',
                               parse_dates=['Date'], date_parser=dateparse, index_col='Date')
         self.rebalancedates = rebaldf.to_dict(orient="index")
 
     def getvix(self):
         # grab vix
-        dateparse = lambda x: dateutil.parser.parse(x)
+        dateparse = lambda x: dateutil.parser.parse(x, dayfirst=True)
         vixdf = pd.read_csv(self.path + '/data/VIX.csv',
                             parse_dates=['Date'], date_parser=dateparse, index_col='Date')
         vixdf = vixdf.rename(lambda x: 'VIX' if 'VIX' in x else x, axis=1)
@@ -72,12 +72,18 @@ class CurrencyMarkets:
                 self.markets[currency]['Spot'] = (1/currdata[['Spot']]).to_dict(orient="Index")
                 self.markets[currency]['Fwdrates'] = (1/currdata[['Fwdrates']]).to_dict(orient="index")
 
+    def runclass(self):
+        self.getcurrencies()
+        self.getspot()
+        self.getforward()
+        self.getrebalancedates()
+        self.getvix()
+        self.calcmarkets()
 
-dirname = r'C:\Users\44794\PycharmProjects\Py4Fin\CandidateProjectUSS'
-markets = CurrencyMarkets(dirname)
-markets.getcurrencies()
-markets.getspot()
-markets.getforward()
-markets.getrebalancedates()
-markets.getvix()
-markets.calcmarkets()
+
+
+
+dirpath = r'C:\Users\44794\PycharmProjects\Py4Fin\CandidateProjectUSS'
+markets = CurrencyMarkets(dirpath)
+markets.runclass()
+
