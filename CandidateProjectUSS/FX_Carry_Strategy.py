@@ -77,6 +77,17 @@ class CurrencyMarkets:
                 self.markets[currency]['Fwdrates'] = 1/currdata[['Fwdrates']].rename(
                     lambda x: currency if 'Fwdrates' in x else x, axis=1)
 
+        masterspot = pd.DataFrame()
+        masterfwdrates = pd.DataFrame()
+        for currency in self.markets.keys():
+            masterspot = pd.concat([masterspot, self.markets[currency]['Spot']], axis=1, join='outer').ffill()
+            masterfwdrates = pd.concat([masterfwdrates, self.markets[currency]['Fwdrates']], axis=1,
+                                       join='outer').ffill()
+
+        datesrange = pd.DataFrame(index=pd.bdate_range(start='1/1/2000', end=dt.datetime.today()))
+        self.markets['Spotdf'] = pd.concat([datesrange, masterspot], axis=1, join='inner')
+        self.markets['Fwdratesdf'] = pd.concat([datesrange, masterfwdrates], axis=1, join='inner')
+
     def runclass(self):
         self.getcurrencies()
         self.getspot()
@@ -89,11 +100,6 @@ dirpath = r'C:\Users\44794\PycharmProjects\Py4Fin\CandidateProjectUSS'
 markets = CurrencyMarkets(dirpath)
 markets.runclass()
 
-masterspot = pd.DataFrame()
-masterfwdrates = pd.DataFrame()
-for currency in markets.markets.keys():
-    masterspot = pd.concat([masterspot, markets.markets[currency]['Spot']], axis=1, join='outer').ffill()
-    masterfwdrates = pd.concat([masterfwdrates, markets.markets[currency]['Fwdrates']], axis=1, join='outer')
-
+rebalrates = pd.concat([markets.rebalancedates, markets.markets['Fwdratesdf']], axis=1, join='inner')
 
 
